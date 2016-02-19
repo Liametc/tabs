@@ -1,7 +1,6 @@
-
 {
-    "tabs": "/hosts/elsdon/user_data/liam_tests/tabs",
-    "desktop": "/u/lih/Desktop",
-    "shotloadsave": "/user_data/RND/dev/lib/python/shotloadsave"
+        "hello": "/u/lih/Downloads", 
+        "ivyaction": "/user_data/RND/dev/lib/python/ivyaction", 
+        "shotloadsave": "/user_data/RND/dev/lib/python/shotloadsave", 
+        "tabs": "/hosts/elsdon/user_data/liam_tests/tabs"
 }
-
