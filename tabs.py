@@ -6,7 +6,6 @@
 import argparse
 import json
 import os
-import git
 
 json_folder_mapping_path = os.path.join(
     os.path.dirname(__file__),
@@ -14,19 +13,6 @@ json_folder_mapping_path = os.path.join(
 )
 
 
-def get_json_dictionary(json_path):
-    """."""
-    def unicode_to_str(data):
-        if isinstance(data, unicode):
-            return str(data)
-        if isinstance(data, dict):
-            dictionary = {}
-            for key, value in data.iteritems():
-                dictionary[unicode_to_str(key)] = unicode_to_str(value)
-            return dictionary
-        return data
-    file_ = file(json_path, 'r')
-    return json.load(file_, object_hook=unicode_to_str)
 
 
 class Tabs(object):
@@ -35,15 +21,29 @@ class Tabs(object):
 
     tab_template = '{tab} --working-directory={dir} --title={title}'
 
-    def __init__(self, json_dict):
+    def __init__(self, json_path):
         """."""
-        self.mapping = json_dict
+        self.mapping = self.get_json_dictionary(json_path)
         self._command = 'Terminal'
 
     @property
     def command(self):
         """."""
         return self._command
+
+    def get_json_dictionary(self, json_path):
+        """."""
+        def unicode_to_str(data):
+            if isinstance(data, unicode):
+                return str(data)
+            if isinstance(data, dict):
+                dictionary = {}
+                for key, value in data.iteritems():
+                    dictionary[unicode_to_str(key)] = unicode_to_str(value)
+                return dictionary
+            return data
+        file_ = file(json_path, 'r')
+        return json.load(file_, object_hook=unicode_to_str)
 
     def append_command(self, string):
         """."""
@@ -66,17 +66,6 @@ class Tabs(object):
             title=name
         )
 
-    def git_pull(self, repo_path):
-        """."""
-        try:
-            repo = git.repo.base.Repo(repo_path)
-        except git.exc.InvalidGitRepositoryError:
-            print 'Cannot pull {0}'.format(repo_path)
-            return
-        name = repo.active_branch.name
-        remote = git.remote.Remote(repo, name)
-        remote.pull(progress=git.remote.RemoteProgress())
-
     def run(self, names=[], list_=False, all_=False, pull=False):
         """."""
         if (list_ or not names) and not all_:
@@ -92,14 +81,12 @@ class Tabs(object):
             line = self.build_tab_string(name, first_line)
             if not line:
                 continue
-            if pull:
-                self.git_pull(self.mapping[name])
             self.append_command(line)
             first_line = False
         os.system(self.command)
 
 
-def argument_parser(testArgs=None, choices=[]):
+def argument_parser(testArgs=None):
     """Create the argument parser."""
     description = (
         'Tabs is a convenient way to open a new Terminal session'
@@ -126,17 +113,10 @@ def argument_parser(testArgs=None, choices=[]):
         action='store_true',
         help='Open all the available modules.'
     )
-    parser.add_argument(
-        '-p',
-        '--pull',
-        action='store_true',
-        help='Pull any changes on the associated git repos'
-    )
     return parser.parse_args(testArgs)
 
 
 if __name__ == '__main__':
-    json_dict = get_json_dictionary(json_folder_mapping_path)
-    args = argument_parser(choices=json_dict.keys())
-    tab = Tabs(json_dict)
-    tab.run(args.modules, args.list_modules, args.all_modules, args.pull)
+    args = argument_parser()
+    tab = Tabs(json_folder_mapping_path)
+    tab.run(args.modules, args.list_modules, args.all_modules)
