@@ -1,0 +1,17 @@
+#!/bin/csh
+
+if ( "$#" == 0 ) then
+    echo "Nothing to clone"
+else if ( "$#" > 0 ) then
+    set name=''
+    if ( "$#" == 1 ) then
+        set fname=`basename $1`
+        set name=$fname:r
+    else
+        set name=$2
+    endif
+    git clone $1 $name
+    cd $name
+    echo -n "\033]0;${name}\007"
+    tabs write -n $name -p $PWD
+endif
