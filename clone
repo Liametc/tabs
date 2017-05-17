@@ -12,6 +12,7 @@ else if ( "$#" > 0 ) then
     endif
     git clone $1 $name
     cd $name
-    echo -n "\033]0;${name}\007"
+    echo -n "\033]0;${name}:master\007"
     tabs write -n $name -p $PWD
+    cp -vf /hosts/elsdon/user_data/liam_tests/tabs/hooks/* $PWD/.git/hooks/
 endif

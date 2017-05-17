@@ -1,0 +1,4 @@
+#! /bin/csh
+set name = `basename $PWD`
+set branch = `git rev-parse --abbrev-ref HEAD`
+echo -n "\033]0;${name}:${branch}\007"
