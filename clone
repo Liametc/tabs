@@ -14,5 +14,6 @@ else if ( "$#" > 0 ) then
     cd $name
     echo -n "\033]0;${name}:master\007"
     tabs write -n $name -p $PWD
-    cp -vf /hosts/elsdon/user_data/liam_tests/tabs/hooks/* $PWD/.git/hooks/
+    dir=`dirname "$0"`
+    cp -vf $dir/hooks/* $PWD/.git/hooks/
 endif
