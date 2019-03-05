@@ -1,4 +1,4 @@
-#!/tools/SITE/scripts/python2.7
+#!/bin/env python2.7
 
 """
 Open a new Terminal session preloaded with your repos.
