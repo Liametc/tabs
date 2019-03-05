@@ -37,7 +37,7 @@ class Tabs(object):
         """
         self.__json_path = json_path
         self.mapping = self.get_json_dictionary(self.__json_path)
-        self._command = 'Terminal'
+        self._command = 'gnome-terminal'
 
     @property
     def command(self):
@@ -83,7 +83,7 @@ class Tabs(object):
         """
         self._command += string
 
-    def build_tab_string(self, name, first_tab=True):
+    def build_tab_string(self, name):
         """
         Build the command for this tab.
 
@@ -97,7 +97,7 @@ class Tabs(object):
         :return: The tab command for this tab.
         :rtype: str
         """
-        tab = ' --tab' if not first_tab else ''
+        tab = ' --tab'
         path = self.mapping.get(name)
         if not path or not os.path.exists(path):
             print 'Ignoring [{0}]: does not exist.'.format(name)
@@ -140,7 +140,7 @@ class Tabs(object):
             names = sorted_keys
         first_line = True
         for name in names:
-            line = self.build_tab_string(name, first_line)
+            line = self.build_tab_string(name)
             if not line:
                 continue
             self.append_command(line)

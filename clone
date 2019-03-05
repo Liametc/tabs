@@ -1,17 +1,22 @@
-#!/bin/csh
+#!/bin/bash
 
-if ( "$#" == 0 ) then
+if [ "$#" -eq 0 ] 
+then
     echo "Nothing to clone"
-else if ( "$#" > 0 ) then
-    set name=''
-    if ( "$#" == 1 ) then
-        set fname=`basename $1`
-        set name=$fname:r
-    else
-        set name=$2
-    endif
-    git clone $1 $name
-    cd $name
-    echo -n "\033]0;${name}\007"
-    tabs write -n $name -p $PWD
-endif
+else 
+    if [ "$#" -gt 0 ]
+    then
+        name=''
+        if [ "$#" -eq 1 ] 
+        then
+            fname="$(basename $1)"
+            name="${fname/.*/}"
+        else
+            name="$2"
+        fi
+        git clone $1 $name
+        cd $name
+        echo -en "\033]0;${name}\a"
+        /home/l.hoflay/dev/tabs/tabs write -n $name -p $PWD
+    fi
+fi
